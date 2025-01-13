@@ -1,0 +1,7 @@
+React is a popular JavaScript frontend library open-sourced by Facebook. It allows you to create and re-use UI elements. React was born out of the need to solve the problem of the browser DOM being slow.
+
+
+React is component-based meaning that components are the building blocks of a React UI. A component describes how a smaller section of the UI looks like and is reusable. Complex applications can be built by nesting components within other components.
+
+
+Another important thing about React is that it’s a Single Page Application (SPA). This means React doesn’t fetch a completely new web page when the user has to be shown a different view, it just re-writes the current web page with any new data fetched from the backend server.
