@@ -5,3 +5,128 @@ React is component-based meaning that components are the building blocks of a Re
 
 
 Another important thing about React is that it’s a Single Page Application (SPA). This means React doesn’t fetch a completely new web page when the user has to be shown a different view, it just re-writes the current web page with any new data fetched from the backend server.
+* React uses Virtual DOM to render components into the browser whereas in React Native, native APIs are used to render components in mobile.
+
+
+
+How does npm start works ??
+An npm script is just a shortcut to run a series of node commands on your project. Any npm script, meaning any node.js commands listed under a package.json file's "scripts" section, are executed through node.js when you call them. So npm start runs the node script that is listed under start in the package.json. As in the article that cbr mentioned in a comment, in the case of create-react-app, this happens:
+
+A new instance of the WebpackDevServer from the library of the same name is created, passing in the compiler and configuration. Webpack is run here by the WebpackDevServer. A listener method on the instance is called, passing in the port and host values. This then clears the console and puts up the text “ Starting the development server…”. The browser is opened with the correct dev URL. Lastly, two listeners are added for when the process is killed, which turns off the web server, and exits the start.js process.
+
+That's a great article @cbr linked and highly recommended. But that is just for CRA. If you are setting up a react project from scratch (highly recommended if you are just starting to learn all this stuff), your start script might look like this:
+
+"start": "webpack-dev-server --mode development --open"
+This tells webpack to spin up a development server, serve the files live, and open the browser to the port you specify in the webpack.config file (or it will use the default 8080). If you already ready to build your project for final deployent, you would write a build script and run npm run build. It might look like this:
+
+"build": "webpack --mode production"
+
+
+**********index.js*************
+import './index.css';
+
+import React from "react";
+import ReactDOM from "react-dom";
+//h1 element
+//syntax - React.createElement(<type>, <props>, <content>)
+// const element = React.createElement( "h1", null, "React Element");
+// console.log(element);
+
+// ReactDOM.render(element, document.querySelector("#root")); // When the render function is called, the whole of the container node is replaced.
+
+// Create a counter display element
+const counterDisplayElement = React.createElement('h1', null, '0');
+
+//Create an increment button element
+const incrementButtonElement = React.createElement('button', null, "+");
+
+//Create a decrement button element
+const decrementButtonElement = React.createElement('button', null, "-");
+
+//Create a container div element that includes all the above elements
+const containerDivElement = React.createElement("div", null, [counterDisplayElement,incrementButtonElement,decrementButtonElement]);
+
+console.log(containerDivElement);
+//Render the container div element to the DOM
+ReactDOM.render(containerDivElement, document.querySelector('#root'));
+
+
+Wait, why did we use "className" as the property value? It should be "class", right? Try setting the property as "class" instead of "className" and see if the class is set for the element rendered --->>>>> In React, the correct property to use for setting CSS classes on elements is className, not class. This is because class is a reserved keyword in JavaScript, and React uses className to avoid conflicts.
+const counterDisplayElement = React.createElement('h1', {className: "counter-display"}, '0');
+If you try to use class instead of className in a React element, it will not work as expected, and the class will not be applied to the rendered element.
+*************************************************************************************************
+Though the corresponding attribute name for "class" is "className", you’ll find that setting the props value to { class: "counter-display" } also working the same. This is because of supporting custom properties from React 16 onwards.
+************************************************************************************************* Q. What happens if you call the ReactDOM.render() function multiple times? Try calling the render() function twice for the same container node (second argument). Also, create a new div element in index.html and call the render() method once for each of the two div elements.
+
+When you call ReactDOM.render() multiple times for the same container node, the second call will replace the content of the first call. This means that only the last rendered element will be displayed in that container. React effectively unmounts the previous component and mounts the new one.
+
+Example of Calling ReactDOM.render() Twice for the Same Container
+Let's say you have the following HTML structure in your index.html:
+
+html
+
+Verify
+
+Open In Editor
+Run
+Copy code
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Example</title>
+</head>
+<body>
+    <div id="root1"></div>
+    <div id="root2"></div>
+    <script src="path/to/your/react-and-react-dom.js"></script>
+    <script src="path/to/your/script.js"></script>
+</body>
+</html>
+JavaScript Code
+Now, in your JavaScript file, you can do the following:
+
+javascript
+
+Verify
+
+Open In Editor
+Run
+Copy code
+// Create a first element to render
+const firstElement = React.createElement('h1', null, 'First Render');
+
+// Render the first element to the first container
+ReactDOM.render(firstElement, document.querySelector("#root1"));
+
+// Create a second element to render
+const secondElement = React.createElement('h1', null, 'Second Render');
+
+// Render the second element to the first container (this will replace the first element)
+ReactDOM.render(secondElement, document.querySelector("#root1"));
+
+// Create a third element to render
+const thirdElement = React.createElement('h1', null, 'Third Render');
+
+// Render the third element to the second container
+ReactDOM.render(thirdElement, document.querySelector("#root2"));
+Explanation
+First Render: The first h1 element ("First Render") is rendered in the div with id="root1".
+Second Render: The second h1 element ("Second Render") is rendered in the same div (root1). This replaces the first element, so only "Second Render" will be visible in that container.
+Third Render: The third h1 element ("Third Render") is rendered in the div with id="root2". This will not affect the content of root1, so "Third Render" will be displayed in root2.
+Result
+In #root1, you will see "Second Render".
+In #root2, you will see "Third Render".
+This demonstrates how React handles rendering and unmounting of components when using the ReactDOM.render() method. Each call to render() for the same container will replace the previous content.
+
+
+
+
+
+
+
+
+
+
+
