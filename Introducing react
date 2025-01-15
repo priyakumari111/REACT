@@ -120,6 +120,136 @@ In #root1, you will see "Second Render".
 In #root2, you will see "Third Render".
 This demonstrates how React handles rendering and unmounting of components when using the ReactDOM.render() method. Each call to render() for the same container will replace the previous content.
 
+*************************************************************************************************************************************************************************
+**********************************************************************************************************************************************************************************
+import './index.css';
+
+import React from "react";
+import ReactDOM from "react-dom";
+h1 element
+syntax - React.createElement(<type>, <props>, <content>)
+const element = React.createElement( "h1", null, "React Element");
+console.log(element);
+
+ReactDOM.render(element, document.querySelector("#root")); // When the render function is called, the whole of the container node is replaced.
+****************************************************************** */
+Create a counter display element
+const counterDisplayElement = React.createElement('h1', {className: "counter-display"}, '0');
+
+//Create an increment button element
+const incrementButtonElement = React.createElement('button', null, "+");
+
+//Create a decrement button element
+const decrementButtonElement = React.createElement('button', null, "-");
+
+//Create a container div element that includes all the above elements
+const containerDivElement = React.createElement("div", null, [counterDisplayElement,incrementButtonElement,decrementButtonElement]);
+
+console.log(containerDivElement);
+//Render the container div element to the DOM
+ReactDOM.render(containerDivElement, document.querySelector('#root'));
+
+*************************************************************** */
+
+step1: Create the counterDisplayElement using React.createElement()
+const counterDisplayElement = React.createElement('h1', {"className": "counter-display"}, 0);
+
+//step2: Create the counterDisplayElementJSX using JSX
+const counterDisplayElementJSX = (<h1 className="counter-display">{2 * 5}</h1>)
+
+//step3: Log both element to the console for comparison
+console.log('counterDisplayElement:', counterDisplayElement);
+console.log('counterDisplayElementJSX:', counterDisplayElementJSX);
+
+********************************************************************** */
+
+Create a counter display element using both Js and  JSX
+const counterDisplayElement = React.createElement('h1', {className: "counter-display"}, '0');
+const counterDisplayElementJSX = (<h1 className = "counter-display">0</h1>);
+
+//Create an increment button element using JS and JSX
+const incrementButtonElement = React.createElement('button', null, "+");
+const incrementButtonElementJSX = (<button>+</button>);
+
+//Create a decrement button element using JS and JSX
+const decrementButtonElement = React.createElement('button', null, "-");
+const decrementButtonElementJSX = (<button>-</button>);
+
+//Create a container div element that includes all the above elements 
+const containerDivElement = React.createElement("div", null, [counterDisplayElement,incrementButtonElement,decrementButtonElement]);
+const containerDivElementJSX = React.createElement(<div>{[counterDisplayElementJSX, incrementButtonElementJSX, decrementButtonElementJSX]}</div>)
+
+console.log(containerDivElement);
+console.log(containerDivElementJSX);
+//Render the container div element to the DOM
+ReactDOM.render(containerDivElement, document.querySelector('#root'));
+ReactDOM.render(containerDivElementJSX, document.querySelector('#root'));
+
+Define a new class = counter extends React.Component. This means that 'counter' is a React component that inherits properties and methods from React.Component'.
+By extending ' React.Component', you can create a component that can manage its own state and lifecycle methods.
+
+******************************************************************** */
+class Counter extends React.Component {
+//render methods defines the 'render' method of the 'Counter' class.
+//The render method is a required method in class components and is responsible for returning the JSX that defines what the componnt should display on the screen.
+    render(){
+        return(
+            <div>
+                <h1 className = "counter-display">0</h1>      
+                <button>+</button>
+                <button>-</button>
+            </div>
+        )
+    }
+}
+
+ReactDOM.render(<counter />, document.querySelector("#root"))
+**************************************************************** */
+class Counter extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            count: 0
+        };
+    }
+
+    incrementCount = () => {
+        this.setState((state) => {
+            return { count: state.count + this.props.diff }; // Increment by diff
+        });
+    };
+
+    decrementCount = () => {
+        this.setState((state) => {
+            return { count: state.count - this.props.diff }; // Decrement by diff
+        });
+    };
+
+    render() {
+        return (
+            <div>
+                <h1 className="counter-display">{this.state.count}</h1>
+                <button onClick={this.incrementCount}>+{this.props.diff}</button>
+                <button onClick={this.decrementCount}>-{this.props.diff}</button>
+            </div>
+        );
+    }
+}
+
+class App extends React.Component {
+    render() {
+        return (
+            <div>
+                <Counter diff={1} />  {/* First counter with diff of 1 */}
+                <Counter diff={10} /> {/* Second counter with diff of 10 */}
+            </div>
+        );
+    }
+}
+
+// Render the App component
+ReactDOM.render(<App />, document.querySelector("#root"));
+
 
 
 
