@@ -1,0 +1,101 @@
+// src/session2-takehome/DogPics.js
+
+import React, { Component } from "react";
+import axios from "axios";
+
+class DogPics extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      breeds: ["Random", "Beagle", "Boxer", "Dalmatian", "Husky"],
+      selectedBreed: "Random",
+      dogImage: "",
+      error: null,
+    };
+  }
+
+  componentDidMount() {
+    this.fetchDogImage();
+  }
+
+  fetchDogImage = async () => {
+    const { selectedBreed } = this.state;
+    let url;
+
+    if (selectedBreed === "Random") {
+      url = "https://dog.ceo/api/breeds/image/random";
+    } else {
+      url = `https://dog.ceo/api/breed/${selectedBreed.toLowerCase()}/images/random`;
+    }
+
+    try {
+      const response = await axios.get(url);
+      this.setState({ dogImage: response.data.message, error: null });
+    } catch (error) {
+      this.setState({ error: "Error fetching dog image!" });
+    }
+  };
+
+  handleBreedChange = (event) => {
+    this.setState({ selectedBreed: event.target.value }, this.fetchDogImage);
+  };
+
+  handleNextClick = () => {
+    this.fetchDogImage();
+  };
+
+  render() {
+    const { breeds, selectedBreed, dogImage, error } = this.state;
+
+    return (
+      <div style={{ padding: "20px", textAlign: "center" }}>
+        <h1>Dog Pics</h1>
+        <select value={selectedBreed} onChange={this.handleBreedChange}>
+          {breeds.map((breed) => (
+            <option key={breed} value={breed}>
+              {breed}
+            </option>
+          ))}
+        </select>
+        <div style={{ margin: "20px 0" }}>
+          {error ? (
+            <div style={{ color: "red" }}>{error}</div>
+          ) : (
+            <img
+              src={dogImage}
+              alt="Dog"
+              style={{
+                maxWidth: "300px",
+                maxHeight: "300px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+              }}
+            />
+          )}
+        </div>
+        <button onClick={this.handleNextClick}>Next</button>
+      </div>
+    );
+  }
+}
+
+export default DogPics;
+
+
+///App.js
+
+// src/App.js
+
+import React from "react";
+import DogPics from "./session2-takehome/DogPics"; // Import the DogPics component
+
+const App = () => {
+  return (
+    <div>
+      <DogPics /> {/* Render the DogPics component */}
+    </div>
+  );
+};
+
+export default App; // Export the App component
+

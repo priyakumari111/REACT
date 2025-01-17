@@ -1,0 +1,106 @@
+// src/session1-takehome/UserDashboard.js
+
+import React, { Component } from "react";
+import axios from "axios";
+
+class UserDashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userData: null,
+      error: null,
+    };
+  }
+
+  // Function to handle button clicks
+  handleButtonClick = async (id) => {
+    try {
+      const response = await axios.get(`https://reqres.in/api/users/${id}`);
+      if (response.status === 200) {
+        this.setState({ userData: response.data.data, error: null });
+      }
+    } catch (error) {
+      // Handle error for button 100
+      if (id === 100) {
+        this.setState({ error: "Error: User not found!" });
+        alert("User  not found!");
+      } else {
+        this.setState({ error: "Error fetching data!" });
+      }
+    }
+  };
+
+  render() {
+    const { userData, error } = this.state;
+
+    return (
+      <div style={{ padding: "20px", textAlign: "center" }}>
+        <h1>User Dashboard</h1>
+
+        {/* Display 4 buttons */}
+        <div>
+          <button onClick={() => this.handleButtonClick(1)}>1</button>
+          <button onClick={() => this.handleButtonClick(2)}>2</button>
+          <button onClick={() => this.handleButtonClick(3)}>3</button>
+          <button onClick={() => this.handleButtonClick(100)}>100</button>
+        </div>
+
+        {/* Display user data or error message */}
+        {error && <div style={{ color: "red" }}>{error}</div>}
+        {userData ? (
+          <div>
+            <ul style={{ listStyleType: "none", padding: 0 }}>
+              <li>Email: {userData.email}</li>
+              <li>Name: {`${userData.first_name} ${userData.last_name}`}</li>
+            </ul>
+            <img
+              src={userData.avatar}
+              alt="User  Avatar"
+              style={{
+                marginTop: "20px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+              }}
+            />
+          </div>
+        ) : (
+          <div>
+            <ul style={{ listStyleType: "none", padding: 0 }}>
+              <li>Email: john.doe@example.com</li>
+              <li>Name: John Doe</li>
+            </ul>
+            <img
+              src="https://pdtxar.com/wp-content/uploads/2019/04/person-placeholder.jpg"
+              alt="Placeholder"
+              style={{
+                marginTop: "20px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+              }}
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
+}
+
+export default UserDashboard; // Export the component
+
+
+// src/App.js
+
+import React from "react";
+import UserDashboard from "./session1-takehome/UserDashboard"; // Import the UserDashboard component
+
+const App = () => {
+  return (
+    <div>
+      <UserDashboard /> {/* Render the UserDashboard component */}
+    </div>
+  );
+};
+
+export default App; // Export the App component
+*****************************************************************************************************************************************************************************************************
+*********************************************************************************************************************************************************************************************************
