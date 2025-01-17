@@ -1,0 +1,172 @@
+import React, { useState } from "react";
+import axios from "axios";
+
+const BookAppointment = () => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    doctor: "",
+    where: "",
+    when: "",
+  });
+  const [step, setStep] = useState(1); // Step 1: Form, Step 2: Success
+  const [loading, setLoading] = useState(false);
+
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await axios.post(
+        "https://jsonplaceholder.typicode.com/posts",
+        formData
+      );
+      console.log("API Response:", response.data);
+      setLoading(false);
+      setStep(2); // Show success banner
+    } catch (error) {
+      console.error("Error:", error);
+      setLoading(false);
+    }
+  };
+
+  // Handle cancel appointment
+  const handleCancel = () => {
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      doctor: "",
+      where: "",
+      when: "",
+    });
+    setStep(1); // Reset to form view
+  };
+
+  return (
+    <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
+      {loading ? (
+        <div style={{ textAlign: "center", fontSize: "18px" }}>
+          Loading... Please wait.
+        </div>
+      ) : step === 1 ? (
+        <form onSubmit={handleSubmit}>
+          <h2>Book a Session</h2>
+          <p>
+            Fill in the form below to book a virtual session with your doctor
+          </p>
+
+          <div>
+            <label>First Name:</label>
+            <input
+              type="text"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div>
+            <label>Last Name:</label>
+            <input
+              type="text"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div>
+            <label>Email:</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div>
+            <label>Doctor:</label>
+            <select
+              name="doctor"
+              value={formData.doctor}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select your doctor</option>
+              <option value="Dr. Smith">Dr. Smith</option>
+              <option value="Dr. Jane">Dr. Jane</option>
+              <option value="Dr. Brown">Dr. Brown</option>
+            </select>
+          </div>
+
+          {formData.doctor && (
+            <>
+              <div>
+                <label>Where?</label>
+                <input
+                  type="text"
+                  name="where"
+                  value={formData.where}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div>
+                <label>When?</label>
+                <input
+                  type="datetime-local"
+                  name="when"
+                  value={formData.when}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </>
+          )}
+
+          <button type="submit">Confirm Booking</button>
+        </form>
+      ) : (
+        <div style={{ textAlign: "center" }}>
+          <h2>Appointment Confirmed!</h2>
+          <p>Your session has been booked successfully.</p>
+          <button onClick={handleCancel}>Cancel Appointment</button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default BookAppointment;
+//App.js
+// src/App.js
+
+import React from "react";
+//import DogPics from "./session2-takehome/DogPics"; // Import the DogPics component
+import BookAppointment from "./session3-takehome/BookAppointment";
+const App = () => {
+  return (
+    <div>
+      {/* <DogPics /> Render the DogPics component */}
+
+      <h1>Book an Appointment</h1>
+      <BookAppointment />
+    </div>
+  );
+};
+
+export default App; // Export the App component
