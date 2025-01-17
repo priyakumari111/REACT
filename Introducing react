@@ -249,8 +249,122 @@ class App extends React.Component {
 
 // Render the App component
 ReactDOM.render(<App />, document.querySelector("#root"));
+****************************************************************************************************************************************************************************************************************************************************
+what is default and named export in react
 
+In React, default export and named export work the same way as they do in JavaScript modules, but they're commonly used for exporting React components, hooks, and utility functions. Here's how they relate specifically to React:
 
+Default Export in React
+Each file (module) can have one default export.
+Commonly used when exporting a single React component from a file.
+Example:
+Exporting (default):
+
+javascript
+Copy
+Edit
+// Header.js
+import React from 'react';
+
+export default function Header() {
+    return <h1>Welcome to My App</h1>;
+}
+Importing:
+
+javascript
+Copy
+Edit
+// App.js
+import Header from './Header';
+
+function App() {
+    return (
+        <div>
+            <Header />
+        </div>
+    );
+}
+
+export default App;
+Use Case:
+Default exports are ideal when a file is dedicated to a single component or module.
+
+Named Export in React
+You can have multiple named exports from a file.
+Requires curly braces {} when importing.
+Often used when a file exports multiple utilities, components, or hooks.
+Example:
+Exporting (named):
+
+javascript
+Copy
+Edit
+// utils.js
+export const formatDate = (date) => date.toLocaleDateString();
+export const calculateAge = (dob) => new Date().getFullYear() - dob.getFullYear();
+Importing:
+
+javascript
+Copy
+Edit
+// App.js
+import { formatDate, calculateAge } from './utils';
+
+function App() {
+    const dob = new Date(1995, 0, 1);
+    return (
+        <div>
+            <p>Formatted Date: {formatDate(new Date())}</p>
+            <p>Age: {calculateAge(dob)}</p>
+        </div>
+    );
+}
+
+export default App;
+Combined Example
+A file can have both a default export and multiple named exports.
+
+Example:
+Exporting:
+
+javascript
+Copy
+Edit
+// Header.js
+import React from 'react';
+
+export const title = "My App";
+export const subtitle = "Building React Components";
+
+export default function Header() {
+    return <h1>{title}</h1>;
+}
+Importing:
+
+javascript
+Copy
+Edit
+// App.js
+import Header, { title, subtitle } from './Header';
+
+function App() {
+    return (
+        <div>
+            <Header />
+            <p>{subtitle}</p>
+        </div>
+    );
+}
+
+export default App;
+Key Differences in React
+Aspect	Default Export	Named Export
+Usage in React	Typically for individual components	Often for multiple utilities/hooks/components
+Import Syntax	import Component from './Component';	import { Component } from './Component';
+Flexibility	Can use any name during import	Must use exact name (or alias it)
+When to Use:
+Default Export: For a single React component or a file meant to export one primary thing.
+Named Export: For utility files, hooks, or when exporting multiple components or functions.
 
 
 
