@@ -1,0 +1,102 @@
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
+const products = [
+  { id: 1, name: "Gold Necklace" },
+  { id: 2, name: "Diamond Ring" },
+  { id: 3, name: "Silver Bracelet" },
+  { id: 4, name: "Platinum Earrings" },
+];
+
+export default function JewelleryBillingApp() {
+  const [cart, setCart] = useState([]);
+  const [inputs, setInputs] = useState({});
+
+  const handleInputChange = (id, field, value) => {
+    setInputs((prev) => ({
+      ...prev,
+      [id]: { ...prev[id], [field]: value },
+    }));
+  };
+
+  const addToCart = (product) => {
+    const { pricePerGram, weight, makingCharge } = inputs[product.id] || {};
+    if (!pricePerGram || !weight || !makingCharge) {
+      alert("Please enter price, weight, and making charge.");
+      return;
+    }
+    setCart([...cart, { ...product, pricePerGram: Number(pricePerGram), weight: Number(weight), makingCharge: Number(makingCharge) }]);
+  };
+
+  const removeFromCart = (index) => {
+    setCart(cart.filter((_, i) => i !== index));
+  };
+
+  const calculateTotal = () => {
+    const subtotal = cart.reduce((total, item) => total + (item.pricePerGram * item.weight) + item.makingCharge, 0);
+    const gst = subtotal * 0.03; // 3% GST
+    return subtotal + gst;
+  };
+
+  return (
+    <div className="p-6">
+      <h1 className="text-3xl font-bold text-center mb-4">PRASAD SONS JEWELLERY</h1>
+      <h2 className="text-2xl font-semibold text-center mb-6">GST Invoice</h2>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <h2 className="text-xl font-semibold mb-2">Jewellery Items</h2>
+          {products.map((product) => (
+            <Card key={product.id} className="mb-2 p-4">
+              <CardContent>
+                <p>{product.name}</p>
+                <input
+                  type="number"
+                  placeholder="Price per gram"
+                  className="border p-1 mt-1 w-full"
+                  onChange={(e) => handleInputChange(product.id, "pricePerGram", e.target.value)}
+                />
+                <input
+                  type="number"
+                  placeholder="Weight (g)"
+                  className="border p-1 mt-1 w-full"
+                  onChange={(e) => handleInputChange(product.id, "weight", e.target.value)}
+                />
+                <input
+                  type="number"
+                  placeholder="Making Charge"
+                  className="border p-1 mt-1 w-full"
+                  onChange={(e) => handleInputChange(product.id, "makingCharge", e.target.value)}
+                />
+                <Button onClick={() => addToCart(product)} className="mt-2">Add to Cart</Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold mb-2">Cart</h2>
+          {cart.length === 0 ? (
+            <p>No items in cart</p>
+          ) : (
+            <>
+              {cart.map((item, index) => (
+                <Card key={index} className="mb-2 p-4">
+                  <CardContent>
+                    <p>{item.name}</p>
+                    <p>Price per gram: ₹{item.pricePerGram}</p>
+                    <p>Weight: {item.weight}g</p>
+                    <p>Making Charge: ₹{item.makingCharge}</p>
+                    <p>Subtotal: ₹{(item.pricePerGram * item.weight) + item.makingCharge}</p>
+                    <Button onClick={() => removeFromCart(index)} variant="destructive" className="mt-2">Remove</Button>
+                  </CardContent>
+                </Card>
+              ))}
+              <h3 className="text-lg font-bold mt-4">Total (including 3% GST): ₹{calculateTotal().toFixed(2)}</h3>
+              <Button className="mt-2">Generate Bill</Button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
