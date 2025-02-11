@@ -1,0 +1,172 @@
+
+Header.js
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Avatar, Button, Stack } from "@mui/material";
+import Box from "@mui/material/Box";
+import React from "react";
+import "./Header.css";
+import { useHistory, Link } from "react-router-dom";
+
+const Header = ({ children, hasHiddenAuthButtons }) => {
+
+  const history = useHistory();
+
+  const logout = () => {
+    localStorage.clear();
+  }
+
+  if (hasHiddenAuthButtons) {
+    return (
+      <Box className="header">
+        <Box className="header-title">
+            <img src="logo_light.svg" alt="QKart-icon"></img>
+        </Box>
+        <Button
+          className="explore-button"
+          startIcon={<ArrowBackIcon />}
+          variant="text"
+          onClick={() => {
+            history.push('/')
+          }}
+        >
+          Back to explore
+        </Button>
+      </Box>
+    );
+  }
+
+  return (
+    <Box className="header">
+      <Box className="header-title">
+          <img src="logo_light.svg" alt="QKart-icon"></img>
+      </Box>
+      <Stack direction='row' spaceing={10} alignItems="center">
+
+        {localStorage.getItem('token') ? <>
+        <Avatar
+        src="avatar.png"
+        alt={localStorage.getItem('username')}
+        />
+          <p>{localStorage.getItem('username')}</p>
+          <Button
+          // className="explore-button"
+          // startIcon={<ArrowBackIcon />}
+          variant="contained"
+          onClick={logout}
+          // onClick={() => {
+          // history.push('/')
+          // }}
+        >
+          Logout
+        </Button>
+        </>: <>
+
+      <Button
+          // className="explore-button"
+          // startIcon={<ArrowBackIcon />}
+          variant="text"
+          onClick={() => {
+            history.push('/login')
+          }}
+        >
+          Login
+        </Button>
+        <Button
+          // className="explore-button"
+          // startIcon={<ArrowBackIcon />}
+          variant="contained"
+          onClick={() => {
+            history.push('/register')
+          }}
+        >
+          Register
+        </Button>
+      
+     </>}
+
+     </Stack>
+    </Box>
+  );
+};
+
+export default Header;
+**********************************************************************************************************
+
+Header.css
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    height: 5vh;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    background: #ffffff;
+}
+
+.username-text {
+    display: none;
+}
+
+.header-title {
+    cursor: pointer;
+}
+
+.explore-button {
+    color: #00a278 !important;
+}
+
+@media screen and (min-width: 768px) {
+    .username-text {
+        display: block;
+    }
+}
+***************************************************************************************************
+Footer.js
+
+import { Box } from "@mui/system";
+import React from "react";
+import "./Footer.css";
+
+const Footer = () => {
+  return (
+    <Box className="footer">
+      <Box>
+        <img src="logo_dark.svg" alt="QKart-icon"></img>
+      </Box>
+      <p className="footer-text">
+        QKart is your one stop solution to the buy the latest trending items
+        with India's Fastest Delivery to your doorstep
+      </p>
+    </Box>
+  );
+};
+
+export default Footer;
+
+***************************************************************************
+Footer.css
+
+.footer {
+    height: 25vh;
+    background-color: #042C22;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-text {
+    color: #fff;
+    opacity: 0.5;
+    text-align: center;
+    font-weight: 300;
+    width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+    .footer-text {
+        width: 40%;
+    }
+}
